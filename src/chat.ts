@@ -8,12 +8,17 @@ const aiBaseUrl = process.env.OPENAI_BASE_URL ||
 const aiApiKey = process.env.OPENAI_API_KEY ||
     "gemini zr3Pjc68z4bOtw==";
 
+export interface ChatMessage {
+    role: string;
+    content: string;
+}
+
 /**
  * Randomly choose an element from an array.
  * @param {Array<object>} choices The array of choices.
  * @return {object} The randomly chosen element.
  */
-export function choose(choices) {
+export function choose(choices: any[]): any {
     const seed = Math.random();
     const index = Math.floor(seed * choices.length);
     return choices[index];
@@ -24,7 +29,7 @@ export function choose(choices) {
  * @param {object} args The arguments to create chat completions.
  * @return {Promise<object>} The response from the AI.
  */
-export async function createChatCompletions(args) {
+export async function createChatCompletions(args: any): Promise<any> {
     const requestUrl = `${aiBaseUrl}/chat/completions`;
     const response = await fetch(requestUrl, {
         method: "POST",
@@ -44,7 +49,7 @@ export async function createChatCompletions(args) {
  * @param {string} prompt The prompt to chat with the AI.
  * @return {Promise<string>} The response from the AI.
  */
-export async function chatWithAI(chatHistory, chatModel, prompt) {
+export async function chatWithAI(chatHistory: any[], chatModel: string, prompt: string): Promise<string> {
     const userPromptMessage = {
         role: "user",
         content: prompt,
@@ -84,7 +89,7 @@ export async function chatWithAI(chatHistory, chatModel, prompt) {
  * @param {string} separator - The separator to split the content.
  * @return {Array<string>} The sliced snippets.
  */
-export function sliceContent(content, maxLength, separator = "\n") {
+export function sliceContent(content: string, maxLength: number, separator: string = "\n"): string[] {
     const substrings = content.split(separator);
     const snippets = [];
 
