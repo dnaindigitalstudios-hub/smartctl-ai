@@ -14,7 +14,8 @@ export interface InspectParams {
     devicePath: string;
     chatHistory: ChatMessage[];
     chatModel: string;
-    inspectPrompt: string;
+    systemMessage: ChatMessage;
+    userMessage: ChatMessage;
 }
 
 export const inspect = async (params: InspectParams): Promise<string> => {
@@ -35,12 +36,12 @@ export const inspect = async (params: InspectParams): Promise<string> => {
         });
     }
 
-    params.chatHistory.push({
-        role: "system",
-        content: params.inspectPrompt,
-    });
+    params.chatHistory.push(params.systemMessage);
 
-    const prompt = "Please analyze the above SMART data.";
-    const reply = await chatWithAI(params.chatHistory, params.chatModel, prompt);
+    const reply = await chatWithAI(
+        params.chatHistory,
+        params.chatModel,
+        params.userMessage,
+    );
     return reply.trim();
 }

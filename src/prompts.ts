@@ -1,11 +1,13 @@
-// Prepare the system prompt
-export interface GenerateInspectPromptParams {
-    chatLanguage: string;
+import {
+    type ChatMessage,
+} from "./chat.ts";
+
+export interface GenerateInspectMessageParams {
     isSendEmail: boolean;
     isColorTerminal: boolean;
 }
 
-export const generateInspectPrompt = (params: GenerateInspectPromptParams) => {
+export const generateInspectSystemMessage = (params: GenerateInspectMessageParams): ChatMessage => {
     let prompt = 'Key Instructions:\n';
 
     if (params.isSendEmail) {
@@ -95,9 +97,31 @@ export const generateInspectPrompt = (params: GenerateInspectPromptParams) => {
     </Template End>\n`
 
     prompt += `Analyze the following SMART data and provide insights or potential issues.\n`;
-    if (params.chatLanguage) {
-        prompt += `!!! Translate all content to ${params.chatLanguage}.`;
-    }
 
-    return prompt;
+    return {
+        role: "system",
+        content: prompt.trim(),
+    };
+}
+
+export interface GenerateInspectUserMessageParams {
+    chatLanguage: string;
+}
+
+export const generateInspectUserMessage = (params: GenerateInspectUserMessageParams): ChatMessage => {
+    return {
+        role: "user",
+        content: `Please analyze the above SMART data and provide insights or potential issues in ${params.chatLanguage}.`,
+    };
+}
+
+export interface GenerateSummaryMessageParams {
+    chatLanguage: string;
+}
+
+export const generateSummaryUserMessage = (params: GenerateSummaryMessageParams): ChatMessage => {
+    return {
+        role: "user",
+        content: `Please provide a concise summary of the inspection reports above in ${params.chatLanguage}, highlighting any critical issues or recommendations.`,
+    };
 }

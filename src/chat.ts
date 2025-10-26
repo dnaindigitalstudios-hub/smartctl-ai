@@ -80,15 +80,15 @@ export async function createChatCompletions(params: ChatCompletionsParams): Prom
  * Chat with the AI.
  * @param {ChatMessage[]} chatHistory The message box to store chat history.
  * @param {string} chatModel The chat model to chat with the AI.
- * @param {string} prompt The prompt to chat with the AI.
+ * @param {ChatMessage} chatMessage The prompt to chat with the AI.
  * @return {Promise<string>} The response from the AI.
  */
-export async function chatWithAI(chatHistory: ChatMessage[], chatModel: string, prompt: string): Promise<string> {
-    const userPromptMessage = {
-        role: "user",
-        content: prompt,
-    };
-
+export async function chatWithAI(
+    chatHistory: ChatMessage[],
+    chatModel: string,
+    chatMessage: ChatMessage
+): Promise<string> {
+    const userPromptMessage = chatMessage;
     const response = await createChatCompletions({
         model: chatModel,
         messages: [
