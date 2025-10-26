@@ -5,89 +5,116 @@ SMARTctl AI is an AI-powered SMART disk health monitoring tool that automaticall
 ## Features
 
 - Automatically analyzes disk SMART data and provides AI insights and suggestions
-- Supports multiple recipients, CC, BCC, and custom subject lines
-- Easy integration with crontab for scheduled tasks
-- Simple shell script integration
+- Supports email notifications via SMTP
+- Supports colored terminal output or plain text output
+- Easy integration with crontab for scheduled monitoring
+- Simple environment variable configuration
 
 ## Installation
 
 1. Clone this repository to your server
-2. Make sure you have `node`, `mailx`, and `smartctl` installed
-3. Set environment variables as needed (for custom AI service, API key, etc.)
+2. Make sure you have `node` (v20 or above recommended) and `smartctl` installed
+3. Install dependencies:
+
+   ```sh
+   npm install
+   ```
+
+4. Copy `.env.sample` to `.env` and adjust settings as needed
 
 ## Configuration
 
-- `OPENAI_BASE_URL`: AI service API endpoint (default provided)
-- `OPENAI_API_KEY`: AI service API key (default provided)
+### AI Chat Configuration
+
 - `CHAT_MODEL`: AI model (default: gemini-2.0-flash)
 - `CHAT_LANGUAGE`: AI response language (default: zh-TW)
+- `OPENAI_BASE_URL`: OpenAI API endpoint (default provided)
+- `OPENAI_API_KEY`: OpenAI API key (default provided)
+
+### Terminal Display Configuration
+
+- `NO_COLOR`: Disable colored terminal output (default: false)
+
+### Email Configuration
+
+- `SEND_EMAIL`: Enable email sending (default: false)
+- `SEND_EMAIL_FROM`: Sender address (default: "SMARTctl-AI <noreply-smartctl-ai@localhost>")
+- `SEND_EMAIL_TO`: Recipient address (default: "Administrator <root@localhost>")
+
+### SMTP Configuration
+
+- `SMTP_HOST`: SMTP server host (default: localhost)
+- `SMTP_PORT`: SMTP server port (default: 25)
+- `SMTP_SECURE`: Use TLS (default: false)
+- `SMTP_USER`: SMTP username (optional)
+- `SMTP_PASS`: SMTP password (optional)
 
 ## Usage
 
-### 1. Source the script
+### 1. Direct Execution
 
 ```sh
-source send_to.sh
+cd /opt/smartctl-ai
+node app.ts
 ```
 
-### 2. Call the function to send email
+### 2. Test Email Sending
 
 ```sh
-SEND_SMART_EMAIL recipient@example.com
-SEND_SMART_EMAIL -c cc@example.com -b bcc@example.com recipient@example.com
-SEND_SMART_EMAIL -s "Custom Subject" recipient1@example.com recipient2@example.com
+SEND_EMAIL=true MAIL_CONTENT="Test email content" node notify.ts
 ```
 
-- You can freely pass any parameters supported by mailx
-- If `-s` (subject) is not specified, a default subject will be added automatically
+### 3. Using Installation Script
 
-### 3. Advanced customization
-
-You can customize AI parameters via environment variables:
+Run the installation script to create a system-wide command:
 
 ```sh
-export CHAT_MODEL=gemini-2.0-flash
-export CHAT_LANGUAGE=zh-TW
-export OPENAI_BASE_URL=...
-export OPENAI_API_KEY=...
+sudo ./install_smartctl-ai.sh
 ```
 
-### 4. Example: Full crontab Script
+This will create `/usr/local/bin/smartctl-ai` script, which can then be executed directly:
 
-You can create a script (e.g., `/usr/local/bin/send_smart_email.sh`) for use with crontab:
+```sh
+smartctl-ai
+```
+
+### 4. Crontab Integration
+
+Create a crontab entry for scheduled monitoring:
+
+```crontab
+# Run SMART check every Monday at 5 AM
+0 5 * * 1 /usr/local/bin/smartctl-ai
+```
+
+Or create a custom script (e.g., `/usr/local/bin/my_smart_check.sh`):
 
 ```sh
 #!/bin/sh
 
-# Source the send_to.sh
-. /opt/smartctl-ai/send_to.sh
-
-# Change working directory
+# Change to project directory
 cd /opt/smartctl-ai
 
-# Start the task
-SEND_SMART_EMAIL \
-  "recipient@example.com"
+# Run the check
+node app.ts
 ```
 
-Then add to your crontab:
+Remember to make it executable:
 
-```crontab
-0 5 * * 1 /usr/local/bin/send_smart_email.sh
+```sh
+chmod +x /usr/local/bin/my_smart_check.sh
 ```
-
-> **Note:**
-> After creating your script (e.g., `/usr/local/bin/send_smart_email.sh`), don't forget to make it executable:
->
-> ```sh
-> chmod +x /usr/local/bin/send_smart_email.sh
-> ```
 
 ## Main Files
 
-- `app.mjs`: Main program, calls smartctl and AI analysis
-- `chat.mjs`: AI chat and API integration
-- `send_to.sh`: Shell function for sending emails
+- `app.ts`: Main program, calls smartctl and performs AI analysis
+- `notify.ts`: Test email sending functionality
+- `src/chat.ts`: AI chat and API integration
+- `src/devices.ts`: Detect storage devices
+- `src/inspect.ts`: Inspect SMART data
+- `src/mailer.ts`: Email sending configuration
+- `src/prompts.ts`: AI prompt generator
+- `install_smartctl-ai.sh`: Installation script
 
 ## License
 
