@@ -3,6 +3,7 @@ import {
 } from "./chat.ts";
 
 export interface GenerateInspectMessageParams {
+    chatLanguage: string;
     isSendEmail: boolean;
     isColorTerminal: boolean;
 }
@@ -65,6 +66,9 @@ export const generateInspectSystemMessage = (params: GenerateInspectMessageParam
     </Template End>\n`
 
     prompt += `Analyze the following SMART data and provide insights or potential issues.\n`;
+    if (params.chatLanguage) {
+        prompt += `!!! Translate all content to ${params.chatLanguage}.`;
+    }
 
     return {
         role: "system",

@@ -64,6 +64,7 @@ const replyMessages: string[] = [];
 
     // Generate prompts
     const systemMessage = generateInspectSystemMessage({
+        chatLanguage,
         isSendEmail,
         isColorTerminal,
     });
