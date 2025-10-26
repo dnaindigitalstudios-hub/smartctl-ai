@@ -33,8 +33,8 @@ import {
 const chatModel = process.env.CHAT_MODEL || "gemini-2.0-flash";
 const chatLanguage = process.env.CHAT_LANGUAGE || "zh-TW";
 
-const isSendEmail = !!process.env.SEND_EMAIL;
-const isColorTerminal = !process.env.NO_COLOR && !process.env.SEND_EMAIL;
+const isSendEmail = process.env.SEND_EMAIL === 'true';
+const isColorTerminal = process.env.NO_COLOR !== 'true' && !isSendEmail;
 
 // Fetch hostname
 const hostnameStr = hostname();
