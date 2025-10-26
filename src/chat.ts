@@ -8,23 +8,62 @@ const aiBaseUrl = process.env.OPENAI_BASE_URL ||
 const aiApiKey = process.env.OPENAI_API_KEY ||
     "gemini zr3Pjc68z4bOtw==";
 
+export interface ChatMessage {
+    role: string;
+    content: string;
+}
+
+export interface ChatCompletionChoice {
+    message: ChatMessage;
+    finish_reason: string;
+    index: number;
+}
+
+export interface ChatCompletionResponse {
+    id: string;
+    object: string;
+    created: number;
+    model: string;
+    choices: ChatCompletionChoice[];
+    usage: {
+        prompt_tokens: number;
+        completion_tokens: number;
+        total_tokens: number;
+    };
+}
+
 /**
  * Randomly choose an element from an array.
  * @param {Array<object>} choices The array of choices.
  * @return {object} The randomly chosen element.
  */
-export function choose(choices) {
+export function choose<T>(choices: T[]): T {
     const seed = Math.random();
     const index = Math.floor(seed * choices.length);
     return choices[index];
 }
 
+export interface ChatCompletionsParams {
+    model: string;
+    messages: ChatMessage[];
+    temperature?: number;
+    top_p?: number;
+    n?: number;
+    stream?: boolean;
+    stop?: string | string[];
+    max_tokens?: number;
+    presence_penalty?: number;
+    frequency_penalty?: number;
+    logit_bias?: { [key: string]: number };
+    user?: string;
+}
+
 /**
  * Create chat completions using the AI model.
- * @param {object} args The arguments to create chat completions.
+ * @param {ChatCompletionsParams} params The arguments to create chat completions.
  * @return {Promise<object>} The response from the AI.
  */
-export async function createChatCompletions(args) {
+export async function createChatCompletions(params: ChatCompletionsParams): Promise<ChatCompletionResponse> {
     const requestUrl = `${aiBaseUrl}/chat/completions`;
     const response = await fetch(requestUrl, {
         method: "POST",
@@ -32,24 +71,24 @@ export async function createChatCompletions(args) {
             "content-type": "application/json",
             "authorization": `Bearer ${aiApiKey}`,
         },
-        body: JSON.stringify(args),
+        body: JSON.stringify(params),
     });
     return await response.json();
 }
 
 /**
  * Chat with the AI.
- * @param {Array<object>} chatHistory The message box to store chat history.
+ * @param {ChatMessage[]} chatHistory The message box to store chat history.
  * @param {string} chatModel The chat model to chat with the AI.
- * @param {string} prompt The prompt to chat with the AI.
+ * @param {ChatMessage} chatMessage The prompt to chat with the AI.
  * @return {Promise<string>} The response from the AI.
  */
-export async function chatWithAI(chatHistory, chatModel, prompt) {
-    const userPromptMessage = {
-        role: "user",
-        content: prompt,
-    };
-
+export async function chatWithAI(
+    chatHistory: ChatMessage[],
+    chatModel: string,
+    chatMessage: ChatMessage
+): Promise<string> {
+    const userPromptMessage = chatMessage;
     const response = await createChatCompletions({
         model: chatModel,
         messages: [
@@ -84,7 +123,7 @@ export async function chatWithAI(chatHistory, chatModel, prompt) {
  * @param {string} separator - The separator to split the content.
  * @return {Array<string>} The sliced snippets.
  */
-export function sliceContent(content, maxLength, separator = "\n") {
+export function sliceContent(content: string, maxLength: number, separator: string = "\n"): string[] {
     const substrings = content.split(separator);
     const snippets = [];
 

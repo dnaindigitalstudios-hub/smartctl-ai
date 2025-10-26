@@ -1,0 +1,30 @@
+{
+  "name": "smartctl-ai",
+  "version": "1.0.0",
+  "description": "AI-powered SMART data analyzer",
+  "type": "module",
+  "main": "app.ts",
+  "scripts": {
+    "start": "node app.ts",
+    "dev": "node --watch app.ts"
+  },
+  "keywords": [
+    "smartctl",
+    "ai",
+    "disk",
+    "health"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/nodemailer": "^7.0.3"
+  },
+  "dependencies": {
+    "commander": "^14.0.2",
+    "dotenv": "^17.2.3",
+    "got": "^14.6.1",
+    "lowdb": "^7.0.1",
+    "nodemailer": "^7.0.10"
+  }
+}
