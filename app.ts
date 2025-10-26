@@ -11,9 +11,12 @@ import {
 } from "./src/devices.ts";
 
 import {
-    generateInspectPrompt,
     inspect,
 } from "./src/inspect.ts";
+
+import {
+    generateInspectPrompt,
+} from "./src/prompts.ts";
 
 // Load configuration from environment variables or use default values
 const chatModel = process.env.CHAT_MODEL || "gemini-2.0-flash";
