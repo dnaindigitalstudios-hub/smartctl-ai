@@ -1,8 +1,6 @@
 #!/usr/bin/node
 
-import {
-    execSync,
-} from "node:child_process";
+import 'dotenv/config';
 
 import {
     type ChatMessage,
