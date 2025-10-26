@@ -11,11 +11,16 @@
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
   "include": [
-    "*.ts"
-, "src/chat.ts", "src/mailer.ts", "src/prompts.ts"  ],
+    "*.ts",
+    "src/chat.ts",
+    "src/mailer.ts",
+    "src/prompts.ts"
+  ],
   "exclude": [
     "node_modules"
   ]
