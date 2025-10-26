@@ -21,9 +21,7 @@ try {
         subject: "SMARTctl-AI Notification Email",
         text: mailContent,
     });
+    console.info("Notification email sent successfully.");
 } catch (error: any) {
     console.error(`Failed to send email:`, error?.message ?? 'Unknown error');
 }
-
-// Log success message
-console.info("Notification email sent successfully.");

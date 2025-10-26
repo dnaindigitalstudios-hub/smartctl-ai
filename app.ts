@@ -122,11 +122,9 @@ if (isSendEmail) {
             to: process.env.SEND_EMAIL_TO || "Administrator <root@localhost>",
             subject: `SMARTctl-AI - SMART Inspection Report for ${hostnameStr}`,
             text: replyMessages.join("\n") || "No inspection reports available.",
-        })
+        });
+        console.info(`Inspection report for ${hostnameStr} has been sent via email.`);
     } catch (error: any) {
         console.error(`Failed to send email for ${hostnameStr}:`, error?.message ?? 'Unknown error');
     }
-
-    // Log success message
-    console.info(`Inspection report for ${hostnameStr} has been sent via email.`);
 }
