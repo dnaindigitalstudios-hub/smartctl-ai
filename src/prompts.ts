@@ -28,72 +28,40 @@ export const generateInspectSystemMessage = (params: GenerateInspectMessageParam
 
     ---
     <Template Start>
-
-    ## S.M.A.R.T. Health Status Live Report
-
-    ### 1. Drive Basics
-    * Date Checked: \`[AI_FILL_DATE]\`
-    * Model: \`[AI_FILL_MODEL]\`
-    * Serial: \`[AI_FILL_SERIAL]\`
-    * Firmware: \`[AI_FILL_FIRMWARE]\`
-    * Capacity: \`[AI_FILL_CAPACITY]\`
-
-    ---
-
-    ### 2. AI Full Analysis & Recommendations
-
-    #### List of Potential Issues:
-    \`[AI_FILL_ISSUES_LIST]\`
-
-    #### Recommended Actions:
-    \`[AI_FILL_RECOMMENDATIONS_LIST]\`
-
-    ---
-
-    ### 3. Summary (At-a-Glance)
-
-    | Item | Status |
-    | :--- | :--- |
-    | Overall Health Status | \`[AI_FILL_STATUS: GOOD ✅ | WARNING ⚠️ | DANGER ❌]\` |
-    | AI Brief Analysis | \`[AI_FILL_SUMMARY_SENTENCE]\` |
-    | Temperature | \`[AI_FILL_TEMP] °C\` (Sensor 1) / \`[AI_FILL_TEMP_2]\` (Sensor 2, if present) |
-
-    ---
-
-    ### 4. RED ALERT - Critical Errors
-    **Any value > 0 in this section indicates immediate drive failure or data risk.**
-
-    | ID | Attribute Name | Standard | Raw Value |
-    | :--- | :--- | :--- | :--- |
-    | \`05\` | Reallocated Sectors Count | Should be 0 | \`[AI_FILL_05]\` |
-    | \`C5\` | Current Pending Sector Count | Should be 0 | \`[AI_FILL_C5]\` |
-    | \`C6\` | Uncorrectable Sector Count | Should be 0 | \`[AI_FILL_C6]\` |
-    | \`01\` | Read Error Rate | Should be 0 (or stable) | \`[AI_FILL_01]\` |
-
-    ---
-
-    ### 5. YELLOW WARNING - Potential Issues
-    **Abnormal values in this section indicate risk or poor usage habits.**
-
-    | Attribute Name | Status (Raw Value) | Notes |
-    | :--- | :--- | :--- |
-    | Unsafe Shutdowns | \`[AI_FILL_UNSAFE_SHUTDOWNS]\` | High value may lead to data corruption. |
-    | Percentage Used (SSD) | \`[AI_FILL_PERCENT_USED]\` % | 100% means the official TBW has been reached. |
-    | Available Spare | \`[AI_FILL_SPARE]\` % | Nearing 0% means the drive is out of spare blocks. |
-    | Temperature | \`[AI_FILL_TEMP] °C\` | Should remain below 70°C. |
-
-    ---
-
-    ### 6. INFO - Drive Vitals
-    **This section tracks drive usage and age.**
-
-    | Attribute Name | Raw Value |
-    | :--- | :--- |
-    | Power-On Hours | \`[AI_FILL_POWER_ON_HOURS]\` hours |
-    | Power Cycle Count | \`[AI_FILL_POWER_CYCLES]\` |
-    | Total Host Writes | \`[AI_FILL_WRITES]\` |
-    | Total Host Reads | \`[AI_FILL_READS]\` |
-
+    S.M.A.R.T. Health Status Live Report
+    1. Drive Basics
+        Date Checked: [AI_FILL_DATE]
+        Model: [AI_FILL_MODEL]
+        Serial: [AI_FILL_SERIAL]
+        Firmware: [AI_FILL_FIRMWARE]
+        Capacity: [AI_FILL_CAPACITY]
+    2. AI Full Analysis & Recommendations
+        List of Potential Issues:
+        [AI_FILL_ISSUES_LIST]
+        Recommended Actions:
+        [AI_FILL_RECOMMENDATIONS_LIST]
+    3. Summary (At-a-Glance)
+        Item: Overall Health Status, Status: [AI_FILL_STATUS: GOOD | WARNING | DANGER]
+        Item: AI Brief Analysis, Status: [AI_FILL_SUMMARY_SENTENCE]
+        Item: Temperature, Status: [AI_FILL_TEMP] °C (Sensor 1) / [AI_FILL_TEMP_2] (Sensor 2, if present)
+    4. RED ALERT - Critical Errors
+        Any value > 0 in this section indicates immediate drive failure or data risk.
+        ID: 05, Attribute Name: Reallocated Sectors Count, Standard: Should be 0, Raw Value: [AI_FILL_05]
+        ID: C5, Attribute Name: Current Pending Sector Count, Standard: Should be 0, Raw Value: [AI_FILL_C5]
+        ID: C6, Attribute Name: Uncorrectable Sector Count, Standard: Should be 0, Raw Value: [AI_FILL_C6]
+        ID: 01, Attribute Name: Read Error Rate, Standard: Should be 0 (or stable), Raw Value: [AI_FILL_01]
+    5. YELLOW WARNING - Potential Issues
+        Abnormal values in this section indicate risk or poor usage habits.
+        Attribute Name: Unsafe Shutdowns, Status (Raw Value): [AI_FILL_UNSAFE_SHUTDOWNS], Notes: High value may lead to data corruption.
+        Attribute Name: Percentage Used (SSD), Status (Raw Value): [AI_FILL_PERCENT_USED] %, Notes: 100% means the official TBW has been reached.
+        Attribute Name: Available Spare, Status (Raw Value): [AI_FILL_SPARE] %, Notes: Nearing 0% means the drive is out of spare blocks.
+        Attribute Name: Temperature, Status (Raw Value): [AI_FILL_TEMP] °C, Notes: Should remain below 70°C.
+    6. INFO - Drive Vitals
+        This section tracks drive usage and age.
+        Attribute Name: Power-On Hours, Raw Value: [AI_FILL_POWER_ON_HOURS] hours
+        Attribute Name: Power Cycle Count, Raw Value: [AI_FILL_POWER_CYCLES]
+        Attribute Name: Total Host Writes, Raw Value: [AI_FILL_WRITES]
+        Attribute Name: Total Host Reads, Raw Value: [AI_FILL_READS]
     </Template End>\n`
 
     prompt += `Analyze the following SMART data and provide insights or potential issues.\n`;
