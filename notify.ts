@@ -14,14 +14,16 @@ if (!isSendEmail) {
 }
 
 // Send notification email
-transport.sendMail({
-    from: process.env.SEND_EMAIL_FROM || "SMARTctl-AI <noreply-smartctl-ai@localhost>",
-    to: process.env.SEND_EMAIL_TO || "Administrator <root@localhost>",
-    subject: "SMARTctl-AI Notification Email",
-    text: mailContent,
-}).catch((error) => {
-    console.error(`Failed to send email:`, error.message);
-});
+try {
+    await transport.sendMail({
+        from: process.env.SEND_EMAIL_FROM || "SMARTctl-AI <noreply-smartctl-ai@localhost>",
+        to: process.env.SEND_EMAIL_TO || "Administrator <root@localhost>",
+        subject: "SMARTctl-AI Notification Email",
+        text: mailContent,
+    });
+} catch (error: any) {
+    console.error(`Failed to send email:`, error?.message ?? 'Unknown error');
+}
 
 // Log success message
 console.info("Notification email sent successfully.");

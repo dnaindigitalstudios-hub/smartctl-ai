@@ -116,14 +116,16 @@ console.info(replyMessages.join("\n"));
 // Send email if configured
 if (isSendEmail) {
     // Send notification email
-    transport.sendMail({
-        from: process.env.SEND_EMAIL_FROM || "SMARTctl-AI <noreply-smartctl-ai@localhost>",
-        to: process.env.SEND_EMAIL_TO || "Administrator <root@localhost>",
-        subject: `SMARTctl-AI - SMART Inspection Report for ${hostnameStr}`,
-        text: replyMessages.join("\n") || "No inspection reports available.",
-    }).catch((error) => {
-        console.error(`Failed to send email for ${hostnameStr}:`, error.message);
-    });
+    try {
+        await transport.sendMail({
+            from: process.env.SEND_EMAIL_FROM || "SMARTctl-AI <noreply-smartctl-ai@localhost>",
+            to: process.env.SEND_EMAIL_TO || "Administrator <root@localhost>",
+            subject: `SMARTctl-AI - SMART Inspection Report for ${hostnameStr}`,
+            text: replyMessages.join("\n") || "No inspection reports available.",
+        })
+    } catch (error: any) {
+        console.error(`Failed to send email for ${hostnameStr}:`, error?.message ?? 'Unknown error');
+    }
 
     // Log success message
     console.info(`Inspection report for ${hostnameStr} has been sent via email.`);
