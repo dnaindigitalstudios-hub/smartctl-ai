@@ -12,13 +12,17 @@ const execAsync = promisify(exec);
 // Define the inspect method
 export interface InspectParams {
     devicePath: string;
-    chatHistory: ChatMessage[];
     chatModel: string;
     systemMessage: ChatMessage;
     userMessage: ChatMessage;
 }
 
-export const inspect = async (params: InspectParams): Promise<string> => {
+export interface InspectResult {
+    smartctlOutput: string;
+    reply: string;
+}
+
+export const inspect = async (params: InspectParams): Promise<InspectResult> => {
     let smartctlResult;
     try {
         const process = await execAsync(`smartctl -a "${params.devicePath}"`);
@@ -29,19 +33,20 @@ export const inspect = async (params: InspectParams): Promise<string> => {
 
     const smartctlOutput = smartctlResult.toString();
     const snippets = sliceContent(smartctlOutput, 2000, "\n");
-    for (const snippet of snippets) {
-        params.chatHistory.push({
-            role: "user",
-            content: snippet,
-        });
-    }
 
-    params.chatHistory.push(params.systemMessage);
+    const chatHistory = snippets.map((snippet) => ({
+        role: "user",
+        content: snippet,
+    })).concat([params.systemMessage]);
 
     const reply = await chatWithAI(
-        params.chatHistory,
+        chatHistory,
         params.chatModel,
         params.userMessage,
     );
-    return reply.trim();
+
+    return {
+        smartctlOutput,
+        reply,
+    };
 }

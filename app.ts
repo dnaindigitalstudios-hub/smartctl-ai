@@ -49,8 +49,8 @@ if (!devicePaths || devicePaths.length === 0) {
     process.exit(1);
 }
 
-// Chat history to maintain context
-const chatHistory: ChatMessage[] = [];
+// SMART history for summary
+const smartHistory: string[] = [];
 
 // Log detected devices
 console.info("Detected devices:", devicePaths);
@@ -77,8 +77,11 @@ const replyMessages: string[] = [];
         replyMessages.push(`\n=== Device: ${devicePath} ===\n`);
         try {
             console.info(`Starting inspection for device ${devicePath}...`);
-            const reply = await inspect({devicePath, chatHistory, chatModel, systemMessage, userMessage});
+            const {
+                reply, smartctlOutput,
+            } = await inspect({devicePath, chatModel, systemMessage, userMessage});
             replyMessages.push(`Inspection report for device ${devicePath}:\n`, reply);
+            smartHistory.push(smartctlOutput);
             console.info(`Inspection completed for device ${devicePath}.`);
         } catch (error: any) {
             console.error(`Error reading SMART data for device ${devicePath}:`, error.message);
@@ -100,7 +103,10 @@ const replyMessages: string[] = [];
         replyMessages.unshift("No inspection reports available.");
     } else {
         console.info("Generating inspection summary...");
-        const inspectChatHistory = chatHistory.filter((message => message.role !== "system"));
+        const inspectChatHistory = smartHistory.map((output) => ({
+            role: "user",
+            content: output,
+        }));
         const replySummary = await chatWithAI(inspectChatHistory, chatModel, userMessage);
         replyMessages.unshift("Inspection Summary:\n", replySummary);
         console.info("Summary generation completed.");
