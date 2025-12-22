@@ -97,6 +97,14 @@ export async function chatWithAI(
         ],
     });
 
+    if (!Array.isArray(response.choices)) {
+        throw new Error(`Invalid response from AI: ${JSON.stringify(response)}`);
+    }
+
+    if (response.choices.length === 0) {
+        throw new Error("No choices returned from AI");
+    }
+
     const choice = choose(response.choices);
     const reply = choice.message.content;
     const assistantReplyMessage = {
